@@ -64,6 +64,11 @@ ol.tr{padding-left:22px;margin:10px 0 0;columns:2;font-size:15px}ol.tr li{break-
 .steps div:nth-child(even){transform:translateY(10px) rotate(1deg)}.steps div:nth-child(odd){transform:rotate(-1deg)}
 table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:2px solid var(--ink);padding:6px 10px;text-align:left}th{background:var(--sun);color:var(--onacc)}
 .tbl{overflow-x:auto}
+#cute{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(92vw,420px);z-index:99;text-align:center;cursor:pointer;background:var(--pink);color:var(--onacc);border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:14px 18px;font-weight:600}
+#cute[hidden]{display:none}
+#cute .big2{font:400 30px/1.1 'Caveat Brush',cursive;margin-bottom:4px}
+#cute.pop{animation:cutepop .6s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes cutepop{from{opacity:0;transform:translateX(-50%) translateY(60px) scale(.6) rotate(-8deg)}}
 footer{text-align:center;margin-top:70px;font-family:'Caveat Brush',cursive;font-size:26px}
 @media(max-width:860px){.hero,.lab,.duel{grid-template-columns:1fr}ol.tr{columns:1}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -154,6 +159,10 @@ footer{text-align:center;margin-top:70px;font-family:'Caveat Brush',cursive;font
   <div class="card">All data is synthetic and the risk numbers are illustrative. Real CVSS scores are future work.</div>
  </div>
 </section>
+<div id="cute" role="status" hidden>
+ <div class="big2">Miss, please give us full marks ,hehe</div>
+ <div>We chaos-tested it so you don’t have to. Pretty please? 💖✨ <i>(hehe)</i></div>
+</div>
 <footer>Built for Design and Analysis of Algorithms. Please be gentle, miss.</footer>
 </main>
 
@@ -230,7 +239,10 @@ $('w1').oninput=e=>{S.w[0]=+e.target.value;draw()};
 $('w2').oninput=e=>{S.w[1]=+e.target.value;draw()};
 $('bBase').onclick=()=>{S.budget=100;S.w=[40,30];S.hit=new Set();draw()};
 $('bWhat').onclick=()=>{S.budget=60;S.w=[25,30];S.hit=new Set([1]);draw()};
-$('bChaos').onclick=()=>{S.hit=new Set();while(S.hit.size<2)S.hit.add(Math.floor(Math.random()*E.length));S.budget=40+Math.floor(Math.random()*35);S.w=[10+Math.floor(Math.random()*20),15+Math.floor(Math.random()*20)];draw()};
+$('bChaos').onclick=()=>{S.hit=new Set();while(S.hit.size<2)S.hit.add(Math.floor(Math.random()*E.length));S.budget=40+Math.floor(Math.random()*35);S.w=[10+Math.floor(Math.random()*20),15+Math.floor(Math.random()*20)];draw();cute()};
+let cuteT;
+function cute(){const t=$('cute');t.hidden=false;t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop');clearTimeout(cuteT);cuteT=setTimeout(()=>{t.hidden=true},4500)}
+$('cute').onclick=()=>{$('cute').hidden=true};
 
 // DP vs greedy duel (the proposal's worked example)
 (function(){const it=[['Firewall',10,20,1,0],['RCE fix',5,35,1,0],['MFA',15,30,1,0],['SMBv1 off',3,15,1,0]];
