@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CyberShield: lock the links, ship the patches</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f3f6ff;--grid:#cfdbff;--ink:#1a1b3a;--card:#fff;--pink:#ff4fa3;--lime:#c6f432;--sun:#ffd23f;--red:#e5322d;--onacc:#1a1b3a;--mute:#5b5f86;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#13142a;--grid:#24274a;--ink:#eceeff;--card:#1d1f3f;--mute:#a4a8d6;--red:#ff6561}}
+:root[data-theme="dark"]{--paper:#13142a;--grid:#24274a;--ink:#eceeff;--card:#1d1f3f;--mute:#a4a8d6;--red:#ff6561}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font:400 17px/1.55 'Bricolage Grotesque',system-ui,sans-serif}
+h1,h2,h3{font-family:'Caveat Brush','Comic Sans MS',cursive;font-weight:400;margin:0;line-height:1}
+main{max-width:1120px;margin:0 auto;padding:24px 18px 60px}
+section{margin-top:72px}
+h2{font-size:clamp(34px,6vw,54px);display:inline-block;background:var(--sun);color:var(--onacc);padding:4px 14px;transform:rotate(-1.2deg);border:2.5px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.sub{max-width:62ch;margin:14px 0 22px}
+.card{background:var(--card);border:2.5px solid var(--ink);box-shadow:5px 5px 0 var(--ink);padding:16px 18px}
+.hero{padding-top:30px;display:grid;grid-template-columns:1.5fr 1fr;gap:28px;align-items:center}
+.hero h1{font-size:clamp(64px,13vw,150px);color:var(--onacc);background:var(--lime);display:inline-block;padding:0 18px 6px;border:3px solid var(--ink);box-shadow:8px 8px 0 var(--pink);transform:rotate(-2deg)}
+.hero p.big{font-size:clamp(20px,2.6vw,27px);font-weight:600;margin:28px 0 10px;max-width:30ch;line-height:1.25}
+.notes{display:grid;gap:14px}
+.note{background:var(--sun);color:var(--onacc);padding:12px 16px;border:2.5px solid var(--ink);box-shadow:4px 4px 0 var(--ink);font-weight:600;animation:slap .5s cubic-bezier(.2,1.6,.4,1) both}
+.note:nth-child(1){transform:rotate(2deg)}.note:nth-child(2){transform:rotate(-2.5deg);background:var(--pink);animation-delay:.12s}.note:nth-child(3){transform:rotate(1.5deg);background:var(--lime);animation-delay:.24s}
+.note small{display:block;font-weight:400;opacity:.8}
+@keyframes slap{from{opacity:0;transform:translateY(-40px) rotate(14deg) scale(1.3)}}
+.lab{display:grid;grid-template-columns:290px 1fr;gap:22px;align-items:start}
+.ctl label{display:flex;justify-content:space-between;font-weight:600;margin-top:12px}
+.ctl output{background:var(--ink);color:var(--paper);padding:0 8px;border-radius:99px}
+input[type=range]{width:100%;accent-color:var(--pink)}
+.btns{display:grid;gap:9px;margin-top:18px}
+button{font:inherit;font-weight:800;color:var(--onacc);background:var(--lime);border:2.5px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:8px 12px;cursor:pointer;text-align:left}
+button:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}button:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+button.p{background:var(--pink)}button.s{background:var(--sun)}
+:focus-visible{outline:3px dashed var(--pink);outline-offset:3px}
+svg.net{width:100%;height:auto;display:block;background:var(--card);border:2.5px solid var(--ink);box-shadow:5px 5px 0 var(--ink)}
+.node text{font:800 13px 'Bricolage Grotesque',sans-serif;fill:var(--onacc);text-anchor:middle;pointer-events:none}
+.edge{cursor:pointer}
+.edge line{stroke-linecap:round;transition:stroke .2s}
+.edge:hover line.vis{stroke-width:8}
+.pill{font:800 12px 'Bricolage Grotesque',sans-serif;text-anchor:middle;fill:var(--onacc)}
+.wob{animation:wob .5s 2}
+@keyframes wob{25%{transform:translate(-4px,0)}75%{transform:translate(4px,0)}}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--mute);margin-top:10px}
+.chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:22px 0 14px}
+.chip b{display:block;font:400 44px/1 'Caveat Brush',cursive}.chip span{font-size:14px;color:var(--mute)}
+.verdict{font-weight:800;font-size:20px;padding:12px 16px;border:2.5px solid var(--ink);box-shadow:4px 4px 0 var(--ink);color:var(--onacc)}
+.ok{background:var(--lime)}.bad{background:var(--pink)}
+.wins{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:20px}
+.bar{height:14px;border:2px solid var(--ink);background:var(--paper);margin:8px 0}.bar i{display:block;height:100%;background:var(--pink)}
+.tag{display:inline-block;margin:3px 4px 3px 0;padding:2px 10px;border:2px solid var(--ink);background:var(--sun);color:var(--onacc);font-weight:600;font-size:15px}
+.tag.x{background:var(--card);color:var(--ink);text-decoration:line-through;border-style:dashed}
+details{margin-top:18px}summary{cursor:pointer;font-weight:800}
+ol.tr{padding-left:22px;margin:10px 0 0;columns:2;font-size:15px}ol.tr li{break-inside:avoid}
+.duel{display:grid;grid-template-columns:1fr 1fr;gap:20px}.duel .card:first-child{transform:rotate(-1deg)}.duel .card:last-child{transform:rotate(1deg)}
+.duel h3{font-size:34px}.big{font:400 64px/1 'Caveat Brush',cursive}
+.steps{display:flex;flex-wrap:wrap;gap:14px;counter-reset:s}
+.steps div{flex:1 1 200px;counter-increment:s;background:var(--card);border:2.5px solid var(--ink);padding:12px 14px;box-shadow:4px 4px 0 var(--ink)}
+.steps div::before{content:counter(s);display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--pink);color:var(--onacc);font-weight:800;border:2px solid var(--ink);margin-right:8px}
+.steps div:nth-child(even){transform:translateY(10px) rotate(1deg)}.steps div:nth-child(odd){transform:rotate(-1deg)}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:2px solid var(--ink);padding:6px 10px;text-align:left}th{background:var(--sun);color:var(--onacc)}
+.tbl{overflow-x:auto}
+footer{text-align:center;margin-top:70px;font-family:'Caveat Brush',cursive;font-size:26px}
+@media(max-width:860px){.hero,.lab,.duel{grid-template-columns:1fr}ol.tr{columns:1}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<header class="hero">
+ <div>
+  <h1>CyberShield</h1>
+  <p class="big">Which links do we lock down, and which patches do we ship first?</p>
+  <p class="sub" style="margin:0">Two algorithms, one pipeline. Kruskal’s spanning tree decides what gets secured. A 0/1 knapsack decides what gets patched. No host gets a patch unless we can actually reach it safely.</p>
+ </div>
+ <div class="notes">
+  <div class="note">Muhammad Furqan Ali<small>CT-24295 · Kruskal + DSU</small></div>
+  <div class="note">Syed Ibrahim Aziz<small>CT-24289 · Knapsack DP</small></div>
+  <div class="note">Araiz Adnan<small>CT-23079 · Dashboard + what-if</small></div>
+ </div>
+</header>
+
+<section id="lab">
+ <h2>The lab: break our network</h2>
+ <p class="sub">This is the report’s 8-node test network, running both algorithms live in your browser. Click any link to compromise it, drag the sliders, or hit the red button and watch the plan fight back.</p>
+ <div class="lab">
+  <div class="card ctl">
+   <label>Security budget (k USD) <output id="ob"></output></label>
+   <input id="budget" type="range" min="0" max="150" value="100">
+   <label>Window 1 (analyst-hours) <output id="o1"></output></label>
+   <input id="w1" type="range" min="5" max="60" value="40">
+   <label>Window 2 (analyst-hours) <output id="o2"></output></label>
+   <input id="w2" type="range" min="5" max="60" value="30">
+   <div class="btns">
+    <button class="s" id="bBase">Reset to baseline</button>
+    <button class="p" id="bWhat">Run the report’s what-if</button>
+    <button id="bChaos" style="background:var(--red);color:#fff">Chaos button (do not press)</button>
+   </div>
+  </div>
+  <div>
+   <svg class="net" id="net" viewBox="0 0 720 450" role="img" aria-label="Network graph of hosts and links"></svg>
+   <div class="legend"><span>🟩 secured by the plan</span><span>🟧 in the tree, can’t afford it</span><span>⬜ skipped (would make a cycle)</span><span>☠ compromised (+35k)</span></div>
+  </div>
+ </div>
+ <div class="chips" id="chips"></div>
+ <div class="verdict" id="verdict"></div>
+ <details class="card"><summary>Show Kruskal’s step-by-step trace</summary><ol class="tr" id="trace"></ol></details>
+ <div class="wins" id="wins"></div>
+</section>
+
+<section>
+ <h2>Why we can’t just be greedy</h2>
+ <p class="sub">Greedy is perfect for the spanning tree. For patches it quietly loses. Same four patches, same 20-hour window (the worked example from our proposal), computed live:</p>
+ <div class="duel" id="duel"></div>
+</section>
+
+<section>
+ <h2>How the two halves talk</h2>
+ <p class="sub">The first algorithm’s output is the second one’s input. That’s the whole trick.</p>
+ <div class="steps">
+  <div>Feed in hosts, links, budget, patches and windows.</div>
+  <div>Kruskal + DSU finds the cheapest links to secure. Already-secure links cost 0 and go first.</div>
+  <div>Grow coverage from the SOC, cheapest affordable link at a time, until the budget runs dry.</div>
+  <div>Hosts with no secured path are flagged exposed. They get zero patches.</div>
+  <div>Everything else enters the pool. Knapsack fills window 1, those patches leave, window 2 goes next.</div>
+  <div>Dashboard shows spend, coverage, patch schedule and risk mitigated.</div>
+ </div>
+</section>
+
+<section>
+ <h2>What it costs to run</h2>
+ <p class="sub">V hosts, E links, n patches, W window hours, T windows.</p>
+ <div class="tbl card"><table>
+  <tr><th>Part</th><th>Time</th><th>Space</th></tr>
+  <tr><td>Sort links</td><td>O(E log E)</td><td>O(E)</td></tr>
+  <tr><td>DSU operations</td><td>O(E α(V))</td><td>O(V)</td></tr>
+  <tr><td>Kruskal total</td><td>O(E log E)</td><td>O(V + E)</td></tr>
+  <tr><td>SOC expansion (our version)</td><td>O(V · E)</td><td>O(V + E)</td></tr>
+  <tr><td>Knapsack, per window</td><td>O(n · W)</td><td>O(n · W)</td></tr>
+  <tr><td><b>Whole pipeline</b></td><td>O(E log E + V·E + T·n·W)</td><td>O(V + E + n·W)</td></tr>
+ </table></div>
+</section>
+
+<section>
+ <h2>Stuff we admit up front</h2>
+ <div class="wins">
+  <div class="card">An MST minimises hardening cost. It does not model attackers moving sideways through the network.</div>
+  <div class="card">The SOC-rooted expansion is a heuristic. The budgeted version of the problem is NP-hard.</div>
+  <div class="card">Several windows at once is the multiple knapsack problem (strongly NP-hard), so filling windows one after another isn’t guaranteed globally optimal.</div>
+  <div class="card">All data is synthetic and the risk numbers are illustrative. Real CVSS scores are future work.</div>
+ </div>
+</section>
+<footer>Built for Design and Analysis of Algorithms. Please be gentle, miss.</footer>
+</main>
+
+<script>
+const N=['SOC','WebSrv','AuthSrv','MailSrv','DBSrv','DevLab','HR-LAN','IoT-Net'];
+const POS=[[70,225],[200,90],[200,355],[385,150],[395,345],[560,200],[545,405],[665,295]];
+const E=[[0,1,0,0],[1,2,10,1],[1,3,25,1],[2,3,8,2],[2,4,15,1],[3,5,30,1],[4,5,12,2],[4,6,18,1],[5,7,22,1],[6,7,9,1],[0,4,40,1]];
+const P=[['TLS-upg',10,20,2,1],['RCE-fix',5,35,3,1],['MFA',15,30,2,2],['SMBv1-off',3,15,3,2],['MailFilter',10,20,2,3],['SQLi-fix',5,35,3,4],['DB-encrypt',15,30,2,4],['Close-RDP',3,15,3,5],['PwdPolicy',8,12,1,6],['Phish-fix',5,35,3,6],['VLAN-iso',10,20,2,7],['Firmware',15,30,2,7]];
+const S={budget:100,w:[40,30],hit:new Set()};
+const $=id=>document.getElementById(id);
+const eff=i=>S.hit.has(i)?E[i][2]+35:(E[i][3]===0?0:E[i][2]);
+const nm=i=>N[E[i][0]]+'–'+N[E[i][1]];
+
+function kruskal(n,ed){ // ed: [u,v,c]
+ const par=[...Array(n).keys()],find=x=>par[x]===x?x:(par[x]=find(par[x]));
+ const ord=ed.map((_,i)=>i).sort((a,b)=>ed[a][2]-ed[b][2]||a-b);
+ const tree=[],trace=[];let cost=0;
+ for(const i of ord){const a=find(ed[i][0]),b=find(ed[i][1]),ok=a!==b;
+  if(ok){par[a]=b;tree.push(i);cost+=ed[i][2]}trace.push([i,ok])}
+ return{tree,trace,cost}}
+
+function knap(items,W){ // items:[name,h,risk,crit,host]
+ const n=items.length,dp=Array.from({length:n+1},()=>new Array(W+1).fill(0));
+ for(let i=1;i<=n;i++){const[,h,r,c]=items[i-1],v=r*c;
+  for(let w=0;w<=W;w++){dp[i][w]=dp[i-1][w];if(h<=w)dp[i][w]=Math.max(dp[i][w],dp[i-1][w-h]+v)}}
+ const pick=[];let w=W;
+ for(let i=n;i>0;i--)if(dp[i][w]!==dp[i-1][w]){pick.push(i-1);w-=items[i-1][1]}
+ return{val:dp[n][W],pick}}
+
+function solve(){
+ const ed=E.map((e,i)=>[e[0],e[1],eff(i)]);
+ const K=kruskal(8,ed),tree=K.tree;
+ const prot=new Set([0]),sec=new Set();let spent=0;
+ for(;;){let best=-1,bc=1e9;
+  for(const t of tree){const[u,v]=E[t],c=eff(t);
+   if(prot.has(u)!==prot.has(v)&&c<bc&&spent+c<=S.budget){bc=c;best=t}}
+  if(best<0)break;sec.add(best);spent+=bc;prot.add(E[best][0]);prot.add(E[best][1])}
+ let pool=P.filter(p=>prot.has(p[4]));const elig=pool.length,wins=[];let risk=0;
+ S.w.forEach(W=>{const r=knap(pool,W),ch=r.pick.map(i=>pool[i]);
+  const h=ch.reduce((a,p)=>a+p[1],0),rk=ch.reduce((a,p)=>a+p[2],0);
+  wins.push({W,ch,h,rk,val:r.val});risk+=rk;pool=pool.filter((_,i)=>!r.pick.includes(i))});
+ return{K,tree,prot,sec,spent,elig,wins,risk,left:pool,stranded:P.filter(p=>!prot.has(p[4]))}}
+
+let BASE=null,prevExposed=new Set();
+function draw(){
+ const R=solve();
+ if(!BASE){const keep=[S.budget,[...S.w],new Set(S.hit)];S.budget=100;S.w=[40,30];S.hit=new Set();BASE=solve();S.budget=keep[0];S.w=keep[1];S.hit=keep[2]}
+ const inTree=new Set(R.tree);let g='';
+ E.forEach((e,i)=>{const[a,b]=[POS[e[0]],POS[e[1]]],c=eff(i),hit=S.hit.has(i)||e[3]===2;
+  let col='var(--grid)',dash='6 8',w=4;
+  if(R.sec.has(i)){col='#7ad000';dash='';w=7}else if(inTree.has(i)){col='#ff9a1f';dash='3 8';w=6}
+  if(hit&&!R.sec.has(i))col=inTree.has(i)?'#ff9a1f':'#e5322d';
+  const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;
+  g+=`<g class="edge" data-i="${i}" tabindex="0" role="button" aria-label="Toggle compromise on ${nm(i)}"><line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="transparent" stroke-width="22"/><line class="vis" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${col}" stroke-width="${w}" stroke-dasharray="${dash}"/>
+  <rect x="${mx-23}" y="${my-12}" width="46" height="22" rx="11" fill="${hit?'#ffb3b0':'#fff'}" stroke="#1a1b3a" stroke-width="2"/><text class="pill" x="${mx}" y="${my+4}">${hit?'☠ ':''}${c}</text></g>`});
+ N.forEach((n,i)=>{const[x,y]=POS[i],ex=!R.prot.has(i),was=prevExposed.has(i);
+  g+=`<g class="node ${ex&&!was?'wob':''}"><circle cx="${x}" cy="${y}" r="${i?34:40}" fill="${i===0?'#c6f432':ex?'#ff4fa3':'#ffd23f'}" stroke="#1a1b3a" stroke-width="3"/><text x="${x}" y="${y+(i?5:-3)}">${n}</text>${i===0?`<text x="${x}" y="${y+16}">🛡️</text>`:''}${ex?`<text x="${x}" y="${y-44}" style="font-size:16px">👀</text>`:''}</g>`});
+ $('net').innerHTML=g;prevExposed=new Set(N.map((_,i)=>i).filter(i=>!R.prot.has(i)));
+ const pc=R.prot.size-1,need=Math.max(0,R.K.cost-S.budget);
+ $('chips').innerHTML=[['Hardening spend',R.spent+'k','of '+R.K.cost+'k for full coverage'],['Protected hosts',pc+' / 7','reachable from the SOC'],['Eligible patches',R.elig+' / 12','the rest are stranded'],['Risk mitigated',R.risk,'baseline was '+BASE.risk]].map(c=>`<div class="card chip"><b>${c[1]}</b>${c[0]}<br><span>${c[2]}</span></div>`).join('');
+ const ex=N.filter((_,i)=>!R.prot.has(i));
+ $('verdict').className='verdict '+(ex.length?'bad':'ok');
+ $('verdict').textContent=ex.length?`${ex.join(' and ')} ${ex.length>1?'are':'is'} exposed and can’t be patched. ${need} more budget units would restore full coverage.`:'Every host is behind the wall. Patch away.';
+ $('trace').innerHTML=R.K.trace.map(([i,ok])=>`<li><b>${nm(i)}</b> (${eff(i)}): ${ok?'take it':'skip, makes a cycle'}</li>`).join('');
+ $('wins').innerHTML=R.wins.map((x,i)=>`<div class="card"><h3>Window ${i+1}</h3><div>${x.h} of ${x.W} h used · ${x.rk} risk · value ${x.val}</div><div class="bar"><i style="width:${x.W?x.h/x.W*100:0}%"></i></div>${x.ch.map(p=>`<span class="tag">${p[0]} <small>${N[p[4]]} · ${p[1]}h</small></span>`).join('')||'<i>nothing fits</i>'}</div>`).join('')+
+ (R.stranded.length?`<div class="card"><h3>Stranded</h3><div>No secured path, so no patch:</div>${R.stranded.map(p=>`<span class="tag x">${p[0]}</span>`).join('')}</div>`:'');
+ $('ob').textContent=S.budget;$('o1').textContent=S.w[0];$('o2').textContent=S.w[1];
+ $('budget').value=S.budget;$('w1').value=S.w[0];$('w2').value=S.w[1]}
+
+$('net').addEventListener('click',e=>{const g=e.target.closest('.edge');if(!g)return;const i=+g.dataset.i;S.hit.has(i)?S.hit.delete(i):S.hit.add(i);draw()});
+$('net').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.target.closest('.edge')&&e.target.closest('.edge').dispatchEvent(new Event('click',{bubbles:true}))}});
+$('budget').oninput=e=>{S.budget=+e.target.value;draw()};
+$('w1').oninput=e=>{S.w[0]=+e.target.value;draw()};
+$('w2').oninput=e=>{S.w[1]=+e.target.value;draw()};
+$('bBase').onclick=()=>{S.budget=100;S.w=[40,30];S.hit=new Set();draw()};
+$('bWhat').onclick=()=>{S.budget=60;S.w=[25,30];S.hit=new Set([1]);draw()};
+$('bChaos').onclick=()=>{S.hit=new Set();while(S.hit.size<2)S.hit.add(Math.floor(Math.random()*E.length));S.budget=40+Math.floor(Math.random()*35);S.w=[10+Math.floor(Math.random()*20),15+Math.floor(Math.random()*20)];draw()};
+
+// DP vs greedy duel (the proposal's worked example)
+(function(){const it=[['Firewall',10,20,1,0],['RCE fix',5,35,1,0],['MFA',15,30,1,0],['SMBv1 off',3,15,1,0]];
+ const d=knap(it,20);let h=0,gv=0,gl=[];
+ [...it].sort((a,b)=>b[2]-a[2]).forEach(p=>{if(h+p[1]<=20){h+=p[1];gv+=p[2];gl.push(p[0])}});
+ const dl=d.pick.map(i=>it[i][0]).reverse(),dh=d.pick.reduce((a,i)=>a+it[i][1],0);
+ $('duel').innerHTML=`<div class="card"><h3>Greedy by value</h3><div class="big">${gv}</div><p>${gl.join(' + ')} · ${h} h. Grabs the biggest prizes first and wastes the window.</p></div><div class="card"><h3>Knapsack DP</h3><div class="big">${d.val}</div><p>${dl.join(' + ')} · ${dh} h. Tries every combination through the table. Optimal.</p></div>`})();
+draw();
+</script>
+</body>
+</html>
